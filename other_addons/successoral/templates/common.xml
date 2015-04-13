@@ -1,4 +1,5 @@
-<odoo>
+<openerp>
+  <data>
 <template id="successoral.top_menu">
   <!-- TODO: TOP MENU -->
     <nav>
@@ -51,4 +52,5 @@
     </html>
 </template> 
 
-</odoo>
+  </data>
+</openerp>

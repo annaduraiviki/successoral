@@ -1,4 +1,5 @@
-<odoo>
+<openerp>
+  <data>
 	<template id="successoral.vie">
   <t t-call="successoral.layout">
 
@@ -30,4 +31,5 @@
     </div>
   </t>
 </template>
-</odoo>
+  </data>
+</openerp>

@@ -1,4 +1,5 @@
-<odoo>
+<openerp>
+  <data>
 	<template id="successoral.home">
   <t t-call="successoral.layout">
     <div id="wrap" class="oe_structure oe_empty mt16">
@@ -11,4 +12,5 @@
     </div>
   </t>
 </template>
-</odoo>
+  </data>
+</openerp>
