@@ -1,0 +1,34 @@
+<odoo>
+
+	<template id="successoral.dispositions">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'dispositions'"/>
+        <t t-set="save_link" t-value="'save-dispositions'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <div>
+          <h2>dispositions du/de la défunt(e)</h2>
+        </div>
+
+        <div>
+          dispositions <b>coucou les dispositionss</b>.
+        </div>
+
+        <div>
+          <form t-att-action="'/save-dispositions/%s' % calcul.uid">
+            <div>
+              Je sais pas trop quoi mettre ici.
+            </div>
+
+            <button class="pull-right btn btn-primary" type="submit">Calculer !</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </t>
+</template>
+</odoo>

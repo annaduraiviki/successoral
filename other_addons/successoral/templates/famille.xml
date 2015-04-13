@@ -1,0 +1,33 @@
+<odoo>
+	<template id="successoral.famille">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'famille'"/>
+        <t t-set="save_link" t-value="'save-famille'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <div>
+          <h2>Situation familiale du/de la défunt(e)</h2>
+        </div>
+
+        <div>
+          Indiquez ici <b>le partenaire et les membres de sa famille en vie</b>.
+        </div>
+
+        <div>
+          <form t-att-action="'/save-famille/%s' % calcul.uid">
+            <div>
+              JOLI GRAPHIQUE, TYPE DE SITUATIONS (10 différentes)
+            </div>
+
+            <button class="pull-right btn btn-primary" type="submit">Suivant</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </t>
+</template>
+</odoo>

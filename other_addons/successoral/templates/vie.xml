@@ -1,0 +1,33 @@
+<odoo>
+	<template id="successoral.vie">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'vie'"/>
+        <t t-set="save_link" t-value="'save-vie'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <div>
+          <h2>Situation familiale du/de la défunt(e)</h2>
+        </div>
+
+        <div>
+          Indiquez ici <b>le choix de vie</b>.
+        </div>
+
+        <div>
+          <form t-att-action="'/save-vie/%s' % calcul.uid">
+            <div>
+              Je ne sais pas quoi mettre ici !
+            </div>
+
+            <button class="pull-right btn btn-primary" type="submit">Suivant</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </t>
+</template>
+</odoo>

@@ -1,0 +1,130 @@
+<odoo>
+
+  
+
+<template id="successoral.donation">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'donation'"/>
+        <t t-set="save_link" t-value="'save-donation'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <div class="row">
+          <h2>Donation du/de la défunt(e)</h2>
+          <h3>Calcul de l'effet de cette donation sur les droits de succession</h3>
+        </div>
+
+        <hr/>
+
+        <div t-if="calcul.donation_ids" class="row">
+          <i>Vous avez actuellement <b><t t-esc="len(calcul.donation_ids)"/></b> donation(s) enregistrée(s)</i>
+        </div>
+
+        <div t-if="not calcul.donation_ids">
+          <div class="row">
+            <i>Cliquez sur le bouton "Ajouter une donation".</i>
+          </div>
+        </div>
+
+
+        <t t-call="successoral.donationModal"/>
+
+        <div t-if="calcul.donation_ids" class="row">
+          <t t-foreach="calcul.donation_ids" t-as="donation">
+            <t t-call="successoral.donationModal"/>
+            <a href="#" data-toggle="modal" t-att-data-target="'#donation_%s' % donation.id">
+              <div class="col-md-3 box-donation">
+                Donation à <t t-esc="donation.nom"/><br/>
+                d'une valeur de <t t-esc="donation.montant"/>€
+              </div>
+            </a>
+          </t>
+        </div>
+
+        <div class="row">
+          <div>
+            <a class="btn btn-default mt16" data-toggle="modal" data-target="#donation_0">+ Ajouter donation</a> 
+          </div>
+          <a class="pull-right btn btn-primary" t-att-href="'/save-donation/%s' % calcul.uid">Suivant</a>
+        </div>
+
+
+      </div>
+    </div>
+  </t>
+</template>
+
+
+<template id="donationModal">
+  <t t-set="current_id" t-value="0 if not donation else donation.id"/>
+
+  <div class="modal fade" t-att-id="'donation_%s' % current_id" tabindex="-1" role="dialog" aria-labelledby="donationModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title w300" id="donationModalTitle"> <i class="fa fa-cube"></i> Ajouter une nouvelle donation</h4>
+        </div>
+
+        <div class="modal-body">
+          <form method="POST" t-att-action="'/ajout-donation/%s' % calcul.uid" class="form-horizontal" role="form">    
+            <input t-if="current_id != 0" name="donation_id" type="hidden" t-att-value="current_id"/>
+
+            <div class="input-group mt16">
+              <span class="input-group-addon">Nom du donataire</span>
+              <input class="form-control" type="text" name="donation_nom" t-att-value="donation.nom if donation else ''"/>
+            </div>
+
+            <div class="input-group mt16">
+              <span class="input-group-addon">Lien de parenté</span>
+              <select class="form-control" name="donation_lien">
+                <option value="enfant" t-att-selected="'selected' if donation and donation.lien == 'enfant' else ''">Enfant</option>
+                <option value="parent" t-att-selected="'selected' if donation and donation.lien == 'parent' else ''">Parent</option>
+                <option value="dunno" t-att-selected="'selected' if donation and donation.lien == 'dunno' else ''">Dunno3</option>
+              </select>
+            </div>
+              
+            <div class="input-group mt16">
+              <span class="input-group-addon">Montant</span>
+              <span class="input-group-addon">€</span>
+              <input class="form-control" type="number" name="donation_montant" t-att-value="donation.montant if donation else 0"/>
+            </div>
+
+            <div class="mt16">
+              Origine:
+              <div>
+                <input type="radio" value="commun" name="donation_origine" t-att-checked="'checked' if donation and donation.origine == 'commun' else ''"/> patrimoine commun des époux donateurs <br/>
+                <input type="radio" value="propre" name="donation_origine" t-att-checked="'checked' if donation and donation.origine == 'propre' else ''"/> patrimoine propre du donateur
+              </div>
+            </div>
+
+            <div class="input-group mt16">
+              <span class="input-group-addon">Type de donation</span>
+              <select class="form-control" name="donation_type">
+                <option value="immeuble" t-att-selected="'selected' if donation and donation.type == 'immeuble' else ''">Immeuble</option>
+                <option value="meuble" t-att-selected="'selected' if donation and donation.type == 'meuble' else ''">Meuble</option>
+                <option value="dunno" t-att-selected="'selected' if donation and donation.type == 'dunno' else ''">Dunno3</option>
+              </select>
+            </div>
+
+            <div class="input-group mt16">
+              <span class="input-group-addon">Moment</span> 
+              <input class="form-control" type="text" name="donation_moment" t-att-value="donation.moment if donation else ''"/>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Sauver</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+</odoo>

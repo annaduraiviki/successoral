@@ -1,0 +1,39 @@
+<odoo>
+<template id="successoral.region">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'region'"/>
+        <t t-set="save_link" t-value="'save-region'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <form t-att-action="'/save-region/%s' % calcul.uid">
+          <h2>
+            Choisissez votre région
+          </h2>
+          <div class="form-group">
+            <div class="radio">
+              <label>
+                <input t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'fr' else ''" name="selected_region" type="radio" value="fr">Région Wallonne</input>
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'nl' else ''" name="selected_region" type="radio" value="nl">Région Flamande</input>
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'bx' else ''" selected="selected" name="selected_region" type="radio" value="bx">Région de Bruxelles-Capitale</input>
+              </label>
+            </div>
+          </div>
+          <button class="pull-right btn btn-primary" type="submit">Suivant</button>
+        </form>
+      </div>
+    </div>
+  </t>
+</template>
+</odoo>

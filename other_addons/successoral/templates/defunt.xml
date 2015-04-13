@@ -1,0 +1,41 @@
+<odoo>
+	<template id="successoral.defunt">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'defunt'"/>
+        <t t-set="save_link" t-value="'save-defunt'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <div class="row">
+          <form t-att-action="'/save-defunt/%s' % calcul.uid">
+            <h2>
+              Indiquez ici les informations relatives au défunt
+            </h2>
+            <div class="col-md-4">
+              <div class="input-group mt16">
+                    <span class="input-group-addon">Prénom</span>
+                    <input class="form-control" type="text" name="defunt_prenom" t-att-value="calcul.defunt_prenom"/>
+              </div>
+              <div class="input-group mt16">
+                    <span class="input-group-addon">Nom</span>
+                    <input class="form-control" type="text" name="defunt_nom" t-att-value="calcul.defunt_nom"/>
+              </div>
+              <div class="input-group mt16">
+                    <span class="input-group-addon">Date de naissance</span>
+                    <input class="form-control datetimepicker" type="text" name="defunt_date_naissance" t-att-value="calcul.defunt_date_naissance"/>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <button class="pull-right btn btn-primary" type="submit">Suivant</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </t>
+</template>
+
+</odoo>

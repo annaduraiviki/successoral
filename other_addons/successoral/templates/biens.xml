@@ -1,0 +1,199 @@
+<odoo>
+	<template id="successoral.biens">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'biens'"/>
+        <t t-set="save_link" t-value="'save-biens'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <div>
+          <h2>Biens du/de la défunt(e)</h2>
+        </div>
+
+        <div>
+          <form t-att-action="'/save-biens/%s' % calcul.uid">
+            <div class="row">
+              <div class="col-md-6 text-center">
+                <h3>Communauté conjugale</h3>
+              </div>
+
+              <div class="col-md-6 text-center">
+                <h3>Patrimoine propre</h3>
+              </div>
+            </div>
+
+            <hr/>
+
+            <div class="box">
+              <div class="row">
+                <h4 class="text-center">1. Biens mobiliers</h4>
+                <div class="col-md-6">
+                  Actif mobilier:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_cong_actif_mobilier" t-att-value="calcul.biens_cong_actif_mobilier"/>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  Actif mobilier:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_propre_actif_mobilier" t-att-value="calcul.biens_propre_actif_mobilier"/>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  Passif mobilier spécifique:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_propre_passif_mobilier" t-att-value="calcul.biens_propre_passif_mobilier"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="box">
+              <div class="row">
+                <h4 class="text-center">2. Biens immobiliers</h4>
+                <div class="col-md-6">
+                  Logement familial:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_conjug_logement_familial" t-att-value="calcul.biens_conjug_logement_familial"/>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  Logement familial:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_propre_logement_familial" t-att-value="calcul.biens_propre_logement_familial"/>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  Passif spécifique relatif au logement familial:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_propre_logement_passif" t-att-value="calcul.biens_propre_logement_passif"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  Autres biens immobiliers:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_conjug_autres" t-att-value="calcul.biens_conjug_autres"/>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  Autres biens immobiliers:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_propre_autres" t-att-value="calcul.biens_propre_autres"/>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  Passif spécifique relatif aux autres biens immobiliers:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_propre_passif" t-att-value="calcul.biens_propre_passif"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="box">
+              <div class="row">
+                <h4 class="text-center">3. Actif de l'entreprise</h4>
+                <div class="col-md-6">
+                  Actif de l'entreprise/entreprise familiale:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_conjug_entreprise_actif" t-att-value="calcul.biens_conjug_entreprise_actif"/>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  Actif de l'entreprise/entreprise familiale:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_propre_entreprise_actif" t-att-value="calcul.biens_propre_entreprise_actif"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="box">
+              <div class="row">
+                <h4 class="text-center">4. Dettes</h4>
+                <div class="col-md-6">
+                  Dettes de la communauté:
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_conjug_dettes" t-att-value="calcul.biens_conjug_dettes"/>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  Dettes du patrimoine propre (= les dettes "non spécifiques"):
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_propre_dettes" t-att-value="calcul.biens_propre_dettes"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="box">
+              <div class="row">
+                <h4 class="text-center">5. Frais funéraires</h4>
+                <div class="col-md-12">
+                  <div class="input-group">
+                    <span class="input-group-addon">€</span>
+                    <input class="form-control" type="number" name="biens_frais_funeraires" t-att-value="calcul.biens_frais_funeraires"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr/>
+
+            <h2>Données supplémentaires en rapport avec les biens</h2>
+
+            <div>
+              <input type="checkbox" name="biens_check1" t-att-checked="'checked' if calcul.biens_check1 else ''"> <b>Vente d'un bien immeumnle dans les 3 ans</b> avant le décès.</input>
+            </div>
+
+            <div>
+              <input type="checkbox" name="biens_check2" t-att-checked="'checked' if calcul.biens_check2 else ''"> <b>Assurance vie</b> au profit d'un ou plusieurs héritiers ou tiers.</input>
+            </div>
+
+            <div>
+              <input type="checkbox" name="biens_check3" t-att-checked="'checked' if calcul.biens_check3 else ''"> <b>Double transmission dans l'année.</b></input>
+            </div>
+
+            <div>
+              <input type="checkbox" name="biens_check4" t-att-checked="'checked' if calcul.biens_check4 else ''"> <b>Transactions de biens immobiliers qui sont considérées comme des fictions.</b></input>
+            </div>
+
+            <button class="pull-right btn btn-primary" type="submit">Suivant</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </t>
+</template>
+
+</odoo>

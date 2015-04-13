@@ -1,0 +1,111 @@
+<odoo>
+
+<template id="successoral.heritiers">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'heritiers'"/>
+        <t t-set="save_link" t-value="'save-heritiers'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <div class="row">
+          <h2>Héritiers du/de la défunt(e)</h2>
+        </div>
+
+        <hr/>
+
+        <div t-if="calcul.heritiers_ids" class="row">
+          <i>Vous avez actuellement <b><t t-esc="len(calcul.heritiers_ids)"/></b> héritier(s) enregistré(s)</i>
+        </div>
+
+        <div t-if="not calcul.heritiers_ids">
+          <div class="row">
+            <i>Cliquez sur le bouton "Ajouter un héritier".</i>
+          </div>
+        </div>
+
+
+        <t t-call="successoral.heritierModal"/>
+
+        <div t-if="calcul.heritiers_ids" class="row">
+          <t t-foreach="calcul.heritiers_ids" t-as="heritier">
+            <t t-call="successoral.heritierModal"/>
+            <a href="#" data-toggle="modal" t-att-data-target="'#heritier_%s' % heritier.id">
+              <div class="col-md-3 box-heritier">
+                <b><t t-esc="heritier.prenom"/> <t t-esc="heritier.nom"/></b>, <t t-esc="heritier.lien"/>
+              </div>
+            </a>
+          </t>
+        </div>
+
+        <div class="row">
+          <div>
+            <a class="btn btn-default mt16" data-toggle="modal" data-target="#heritier_0">+ Ajouter un héritier</a> 
+          </div>
+          <a class="pull-right btn btn-primary" t-att-href="'/save-heritiers/%s' % calcul.uid">Suivant</a>
+        </div>
+
+
+      </div>
+    </div>
+  </t>
+</template>
+
+
+<template id="heritierModal">
+  <t t-set="current_id" t-value="0 if not heritier else heritier.id"/>
+
+  <div class="modal fade" t-att-id="'heritier_%s' % current_id" tabindex="-1" role="dialog" aria-labelledby="heritierModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title w300" id="heritierModalTitle"> <i class="fa fa-cube"></i> Ajouter un nouvel héritiers</h4>
+        </div>
+
+        <div class="modal-body">
+          <form method="POST" t-att-action="'/ajout-heritiers/%s' % calcul.uid" class="form-horizontal" role="form">    
+            <input t-if="current_id != 0" name="heritier_id" type="hidden" t-att-value="current_id"/>
+
+            <div class="input-group mt16">
+              <span class="input-group-addon">Prénom</span>
+              <input class="form-control" type="text" name="heritier_prenom" t-att-value="None if not heritier else heritier.prenom"/>
+            </div>
+            <div class="input-group mt16">
+              <span class="input-group-addon">Nom</span>
+              <input class="form-control" type="text" name="heritier_nom" t-att-value="None if not heritier else heritier.nom"/>
+            </div>
+            <div class="input-group mt16">
+              <span class="input-group-addon">Lien de parenté</span>
+              <select class="form-control" name="heritier_lien">
+                <option value="enfant" t-att-selected="'selected' if heritier and heritier.lien == 'enfant' else ''">Enfant</option>
+                <option value="epoux" t-att-selected="'selected' if heritier and heritier.lien == 'epoux' else ''">Epoux/Epouse</option>
+                <option value="petit-enfant" t-att-selected="'selected' if heritier and heritier.lien == 'petit-enfant' else ''">Petit-Enfant</option>
+              </select>
+            </div>
+            <div class="input-group mt16">
+              <span class="input-group-addon">Date de naissance</span>
+              <input class="form-control datetimepicker" type="text" name="heritier_date_naissance" t-att-value="None if not heritier else heritier.date_naissance"/>
+            </div>
+            <div class="mt16">
+              <input type="checkbox" name="heritier_is_hand" t-att-checked="'checked' if heritier and heritier.is_hand else ''"> <b>Handicapé</b></input>
+            </div>
+            <div class="mt16">
+              <input type="checkbox" name="heritier_is_dead" t-att-checked="'checked' if heritier and heritier.is_dead else ''"> <b>Décédé</b></input>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Sauver</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+</odoo>

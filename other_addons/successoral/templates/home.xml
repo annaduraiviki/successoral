@@ -1,0 +1,14 @@
+<odoo>
+	<template id="successoral.home">
+  <t t-call="successoral.layout">
+    <div id="wrap" class="oe_structure oe_empty mt16">
+      <div class="text-center">
+        <h1>Calculateur Succesoral</h1>
+        <p>[TODO] Accroche</p>
+        <a class="btn btn-primary" href="/begin">Start Now <i class="fa fa-angle-right"></i></a>
+      </div>
+
+    </div>
+  </t>
+</template>
+</odoo>

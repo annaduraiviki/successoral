@@ -1,0 +1,54 @@
+<odoo>
+<template id="successoral.top_menu">
+  <!-- TODO: TOP MENU -->
+    <nav>
+      <ul class="pagination">
+<!--         <li>
+          <a href="#" aria-label="Previous">
+            <span aria-hidden="true">Previous</span>
+          </a>
+        </li> -->
+        <li><a t-if="calcul.step >= 0" t-att-class="'active-menu' if active_menu == 'region' else ''" t-att-href="'/%s/%s?show=region' % (save_link, calcul.uid)">Région</a></li>
+        <li><a t-if="calcul.step >= 1" t-att-class="'active-menu' if active_menu == 'defunt' else ''" t-att-href="'/%s/%s?show=defunt' % (save_link, calcul.uid)">Défunt</a></li>
+        <!-- <li><a t-if="calcul.step >= 2" t-att-class="'active-menu' if active_menu == 'famille' else ''" t-att-href="'/%s/%s?show=famille' % (save_link, calcul.uid)">Personnes concernées</a></li> -->
+<!--         <li><a t-if="calcul.step >= 3" t-att-class="'active-menu' if active_menu == 'vie' else ''" t-att-href="'/%s/%s?show=vie' % (save_link, calcul.uid)">Choix de vie</a></li> -->
+        <li><a t-if="calcul.step >= 2" t-att-class="'active-menu' if active_menu == 'heritiers' else ''" t-att-href="'/%s/%s?show=heritiers' % (save_link, calcul.uid)">Héritiers</a></li>
+        <li><a t-if="calcul.step >= 3" t-att-class="'active-menu' if active_menu == 'biens' else ''" t-att-href="'/%s/%s?show=biens' % (save_link, calcul.uid)">Biens</a></li>
+        <li><a t-if="calcul.step >= 4" t-att-class="'active-menu' if active_menu == 'donation' else ''" t-att-href="'/%s/%s?show=donation' % (save_link, calcul.uid)">Donation (option)</a></li>
+        <li><a t-if="calcul.step >= 4" t-att-class="'active-menu' if active_menu == 'dispositions' else ''" t-att-href="'/%s/%s?show=dispositions' % (save_link, calcul.uid)">Dispositions</a></li>
+        <li><a t-if="calcul.step >= 5" t-att-class="'active-menu' if active_menu == 'results' else ''" t-att-href="'/%s/%s?show=results' % (save_link, calcul.uid)">Résultats</a></li>
+<!--         <li>
+          <a href="#" aria-label="Next">
+            <span aria-hidden="true">Next</span>
+          </a>
+        </li> -->
+      </ul>
+    </nav>
+</template>
+
+<template id="successoral.layout" name="Successoral Layout">&lt;!DOCTYPE html&gt;
+    <html>
+        <head>
+            <meta charset="utf-8"/>
+            <t t-call-assets="web.assets_common"/>
+            <t t-call-assets="website.assets_frontend"/>
+            <link href="/successoral/static/src/css/successoral.css" rel="stylesheet"/>
+
+            <!-- Datetime Picker -->
+            <link rel="stylesheet" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+
+            <!-- <script type="text/javascript" src="/successoral/static/src/js/successoral.js"></script> -->
+            <!-- <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet"></link>
+            <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
+            <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script> -->
+        </head>
+        <body>
+            <main class="mb64">
+                <t t-raw="0"/>
+            </main>
+        </body>
+    </html>
+</template> 
+
+</odoo>

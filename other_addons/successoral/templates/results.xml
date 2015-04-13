@@ -1,0 +1,144 @@
+<odoo>
+	<template id="successoral.results">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <t t-set="active_menu" t-value="'results'"/>
+        <t t-set="save_link" t-value="'save-results'"/>
+        <t t-call="successoral.top_menu"/>
+
+        <div>
+          <i>Calcul fait le <span t-field="calcul.create_date"/></i>
+        </div>
+
+        <div>
+          <h2>Succession de <span t-field="calcul.famille_name"/></h2>
+        </div>
+
+        <div>
+          Héritage avec [TODO: résumé de la famille]
+        </div>
+
+        <div>
+          [TODO: type de régime légal]
+        </div>
+
+        <div class="mt32">
+          <h3>Communauté conjugale</h3>
+
+          <table class="table">
+            <tr>
+              <th></th>
+              <th>Actif brut</th>
+              <th>La part dans le passif spécifique</th>
+              <th>Net</th>
+            </tr>
+
+            <tr>
+              <td>Immobilier</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+
+            <tr>
+              <td>Logement familial</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+
+            <tr>
+              <td>Mobilier</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+
+            <tr>
+              <td>Actif de l'entreprise</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+
+            <tr>
+              <td>Total</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="mt32">
+          <h3>Succession</h3>
+
+          <table class="table">
+            <tr>
+              <th></th>
+              <th>La moitié de la communauté nette</th>
+              <th>Biens propres</th>
+              <th>Passif spécifique</th>
+              <th>Passif non-spécifique</th>
+              <th>Actif imposable</th>
+            </tr>
+
+            <tr>
+              <td>Immobilier</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+
+            <tr>
+              <td>Logement familial</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+
+            <tr>
+              <td>Mobilier</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+
+            <tr>
+              <td>Actif de l'entreprise</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+
+            <tr>
+              <td>Total</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+              <td>1000€</td>
+            </tr>
+          </table>
+        </div>
+
+        <div>
+          [TODO: Le reste]
+        </div>
+      </div>
+    </div>
+  </t>
+</template>
+
+</odoo>
