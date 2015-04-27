@@ -14,8 +14,8 @@
         <t t-call="successoral.top_menu"/>
 
         <div class="row">
-          <h2>Donation du/de la défunt(e)</h2>
-          <h3>Calcul de l'effet de cette donation sur les droits de succession</h3>
+          <h2>Donations du/de la défunt(e) dans les 3 ans précédant le décès.</h2>
+          <h3>Calcul de l'effet de ces donations sur les droits de succession</h3>
         </div>
 
         <hr/>
@@ -38,8 +38,8 @@
             <t t-call="successoral.donationModal"/>
             <a href="#" data-toggle="modal" t-att-data-target="'#donation_%s' % donation.id">
               <div class="col-md-3 box-donation">
-                Donation à <t t-esc="donation.nom"/><br/>
-                d'une valeur de <t t-esc="donation.montant"/>€
+                Donation à <t t-esc="donation.heritier_id.prenom"/><br/>
+                d'une valeur de <t t-esc="donation.amount"/>€
               </div>
             </a>
           </t>
@@ -73,33 +73,28 @@
 
         <div class="modal-body">
           <form method="POST" t-att-action="'/ajout-donation/%s' % calcul.uid" class="form-horizontal" role="form">    
-            <input t-if="current_id != 0" name="donation_id" type="hidden" t-att-value="current_id"/>
+            <input required="required" t-if="current_id != 0" name="donation_id" type="hidden" t-att-value="current_id"/>
 
             <div class="input-group mt16">
-              <span class="input-group-addon">Nom du donataire</span>
-              <input class="form-control" type="text" name="donation_nom" t-att-value="donation.nom if donation else ''"/>
-            </div>
-
-            <div class="input-group mt16">
-              <span class="input-group-addon">Lien de parenté</span>
-              <select class="form-control" name="donation_lien">
-                <option value="enfant" t-att-selected="'selected' if donation and donation.lien == 'enfant' else ''">Enfant</option>
-                <option value="parent" t-att-selected="'selected' if donation and donation.lien == 'parent' else ''">Parent</option>
-                <option value="dunno" t-att-selected="'selected' if donation and donation.lien == 'dunno' else ''">Dunno3</option>
+              <span class="input-group-addon">Héritier</span>
+              <select class="form-control" name="donation_heritier">
+                <t t-foreach="calcul.heritier_ids" t-as="heritier">
+                  <option t-att-value="heritier.id" t-att-selected="'selected' if donation and donation.heritier_id == heritier else ''"><t t-esc="heritier.prenom"/> <t t-esc="heritier.nom"/></option>
+                </t>
               </select>
             </div>
               
             <div class="input-group mt16">
-              <span class="input-group-addon">Montant</span>
+              <span class="input-group-addon">amount</span>
               <span class="input-group-addon">€</span>
-              <input class="form-control" type="number" name="donation_montant" t-att-value="donation.montant if donation else 0"/>
+              <input required="required" class="form-control" type="number" name="donation_amount" t-att-value="donation.amount if donation else 0"/>
             </div>
 
             <div class="mt16">
               Origine:
               <div>
-                <input type="radio" value="commun" name="donation_origine" t-att-checked="'checked' if donation and donation.origine == 'commun' else ''"/> patrimoine commun des époux donateurs <br/>
-                <input type="radio" value="propre" name="donation_origine" t-att-checked="'checked' if donation and donation.origine == 'propre' else ''"/> patrimoine propre du donateur
+                <input required="required" type="radio" value="commun" name="donation_origine" t-att-checked="'checked' if donation and donation.origine == 'commun' else ''"/> patrimoine commun des époux donateurs <br/>
+                <input required="required" type="radio" value="propre" name="donation_origine" t-att-checked="'checked' if donation and donation.origine == 'propre' else ''"/> patrimoine propre du donateur
               </div>
             </div>
 
@@ -112,10 +107,10 @@
               </select>
             </div>
 
-            <div class="input-group mt16">
+<!--             <div class="input-group mt16">
               <span class="input-group-addon">Moment</span> 
-              <input class="form-control" type="text" name="donation_moment" t-att-value="donation.moment if donation else ''"/>
-            </div>
+              <input required="required" class="form-control" type="text" name="donation_moment" t-att-value="donation.moment if donation else ''"/>
+            </div> -->
             
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Sauver</button>

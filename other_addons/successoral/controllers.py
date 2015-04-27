@@ -10,6 +10,10 @@ import uuid
 import werkzeug
 
 
+def _get_calcul(uid):
+    return request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+
+
 class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/', auth='public')
@@ -27,7 +31,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/region/<string:uid>', auth='public')
     def region(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         return http.request.render('successoral.region', {
             'calcul': calcul,
@@ -35,7 +39,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/save-region/<string:uid>', auth='public')
     def save_region(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         if calcul.step < 1:
             calcul.step = 1
@@ -51,7 +55,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/defunt/<string:uid>', auth='public')
     def defunt(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         return http.request.render('successoral.defunt', {
             'calcul': calcul,
@@ -59,7 +63,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/save-defunt/<string:uid>', auth='public')
     def save_defunt(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         if calcul.step < 2:
             calcul.step = 2
@@ -79,7 +83,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     # @http.route('/famille/<string:uid>', auth='public')
     # def famille(self, uid, **kw):
-    #     calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+    #     calcul = _get_calcul(uid)
 
     #     return http.request.render('successoral.famille', {
     #         'calcul': calcul,
@@ -87,7 +91,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     # @http.route('/save-famille/<string:uid>', auth='public')
     # def save_famille(self, uid, **kw):
-    #     calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+    #     calcul = _get_calcul(uid)
 
     #     if calcul.step < 3:
     #         calcul.step = 3
@@ -100,7 +104,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     # @http.route('/vie/<string:uid>', auth='public')
     # def vie(self, uid, **kw):
-    #     calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+    #     calcul = _get_calcul(uid)
 
     #     return http.request.render('successoral.vie', {
     #         'calcul': calcul,
@@ -108,7 +112,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     # @http.route('/save-vie/<string:uid>', auth='public')
     # def save_vie(self, uid, **kw):
-    #     calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+    #     calcul = _get_calcul(uid)
 
     #     if calcul.step < 3:
     #         calcul.step = 3
@@ -121,15 +125,28 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/heritiers/<string:uid>', auth='public')
     def heritiers(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
+
+        all_liens = [
+            ['epoux', 'Epoux'],
+            ['cohabitant', 'Cohabitant'],
+            ['frere', 'Frère ou soeur'],
+            ['enfant', 'Enfant'],
+            ['petit-enfant', 'Petit-enfant'],
+            ['oncle', 'Oncle ou tante'],
+            ['neveu', 'Neveu ou niece'],
+            ['entreprise', '(Petite ou moyenne) entreprise'],
+            ['autre', 'Autre']
+        ]
 
         return http.request.render('successoral.heritiers', {
             'calcul': calcul,
+            'all_liens': all_liens,
         })
 
     @http.route('/save-heritiers/<string:uid>', auth='public')
     def save_heritiers(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         if calcul.step < 3:
             calcul.step = 3
@@ -143,35 +160,35 @@ class Successoral(openerp.addons.website.controllers.main.Website):
     @http.route('/ajout-heritiers/<string:uid>', auth='public')
     def ajout_heritiers(self, uid, **kw):
 
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
+
+        heritier = None
+
+        values = {
+            'nom': kw.get('heritier_nom'),
+            'prenom': kw.get('heritier_prenom'),
+            'lien': kw.get('heritier_lien'),
+            'date_naissance': kw.get('heritier_date_naissance'),
+            'is_hand': kw.get('heritier_is_hand'),
+            'is_dead': kw.get('heritier_is_dead'),
+        }
+
+        if values['lien'] == 'epoux' and calcul.heritier_ids.filtered(lambda x: x.lien == 'epoux'):
+            return self._error(uid, 'Il ne peut y avoir que un seul époux', '/heritiers/%s' % calcul.uid)
 
         if kw.get('heritier_id'):
             heritier = request.env['successoral.heritier'].sudo().browse(int(kw.get('heritier_id')))
-            if heritier:
-                heritier.sudo().write({
-                    'nom': kw.get('heritier_nom'),
-                    'prenom': kw.get('heritier_prenom'),
-                    'lien': kw.get('heritier_lien'),
-                    'date_naissance': kw.get('heritier_date_naissance'),
-                    'is_hand': kw.get('heritier_is_hand'),
-                    'is_dead': kw.get('heritier_is_dead'),
-                })
+        if heritier:
+            heritier.sudo().write(values)
         else:
-            heritier = request.env['successoral.heritier'].sudo().create({
-                'calcul_id': calcul.id,
-                'nom': kw.get('heritier_nom'),
-                'prenom': kw.get('heritier_prenom'),
-                'lien': kw.get('heritier_lien'),
-                'date_naissance': kw.get('heritier_date_naissance'),
-                'is_hand': kw.get('heritier_is_hand'),
-                'is_dead': kw.get('heritier_is_dead'),
-            })
+            values['calcul_id'] = calcul.id
+            heritier = request.env['successoral.heritier'].sudo().create(values)
 
         return werkzeug.utils.redirect('/heritiers/%s' % calcul.uid)
 
     @http.route('/biens/<string:uid>', auth='public')
     def biens(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         return http.request.render('successoral.biens', {
             'calcul': calcul,
@@ -179,14 +196,14 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/save-biens/<string:uid>', auth='public')
     def save_biens(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         if calcul.step < 4:
             calcul.step = 4
         # DEAL WITH POST PARAMETERS
 
-        if kw.get('biens_cong_actif_mobilier'):
-            calcul.biens_cong_actif_mobilier = kw.get('biens_cong_actif_mobilier')
+        if kw.get('biens_conjug_actif_mobilier'):
+            calcul.biens_conjug_actif_mobilier = kw.get('biens_conjug_actif_mobilier')
         if kw.get('biens_propre_actif_mobilier'):
             calcul.biens_propre_actif_mobilier = kw.get('biens_propre_actif_mobilier')
         if kw.get('biens_propre_passif_mobilier'):
@@ -237,7 +254,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/donation/<string:uid>', auth='public')
     def donation(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         return http.request.render('successoral.donation', {
             'calcul': calcul,
@@ -245,7 +262,7 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/save-donation/<string:uid>', auth='public')
     def save_donation(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         if calcul.step < 4:
             calcul.step = 4
@@ -257,35 +274,49 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/ajout-donation/<string:uid>', auth='public')
     def ajout_donation(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
+        donation = None
+        values = {
+            'heritier_id': kw.get('donation_heritier'),
+            'amount': kw.get('donation_amount'),
+            'origine': kw.get('donation_origine'),
+            'type': kw.get('donation_type'),
+        }
         if kw.get('donation_id'):
             donation = request.env['successoral.donation'].sudo().browse(int(kw.get('donation_id')))
-            if donation:
-                donation.sudo().write({
-                    'nom': kw.get('donation_nom'),
-                    'lien': kw.get('donation_lien'),
-                    'montant': kw.get('donation_montant'),
-                    'origine': kw.get('donation_origine'),
-                    'type': kw.get('donation_type'),
-                    'moment': kw.get('donation_moment'),
-                })
+        if donation:
+                donation.sudo().write(values)
         else:
-            donation = request.env['successoral.donation'].sudo().create({
-                'calcul_id': calcul.id,
-                'nom': kw.get('donation_nom'),
-                'lien': kw.get('donation_lien'),
-                'montant': kw.get('donation_montant'),
-                'origine': kw.get('donation_origine'),
-                'type': kw.get('donation_type'),
-                'moment': kw.get('donation_moment'),
-            })
+            values['calcul_id'] = calcul.id
+            request.env['successoral.donation'].sudo().create(values)
 
         return werkzeug.utils.redirect('/donation/%s' % calcul.uid)
 
+    @http.route('/ajout-disposition/<string:uid>', auth='public')
+    def ajout_disposition(self, uid, **kw):
+        calcul = _get_calcul(uid)
+
+        values = {
+            'heritier_id': kw.get('disposition_heritier'),
+            'amount': kw.get('disposition_amount'),
+            'origine': kw.get('disposition_origine'),
+            'type': kw.get('disposition_type'),
+        }
+        disposition = None
+        if kw.get('donation_id'):
+            disposition = request.env['successoral.disposition'].sudo().browse(int(kw.get('disposition_id')))
+        if disposition:
+            disposition.sudo().write(values)
+        else:
+            values['calcul_id'] = calcul.id
+            disposition = request.env['successoral.disposition'].sudo().create(values)
+
+        return werkzeug.utils.redirect('/dispositions/%s' % calcul.uid)
+
     @http.route('/dispositions/<string:uid>', auth='public')
     def dispositions(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         return http.request.render('successoral.dispositions', {
             'calcul': calcul,
@@ -293,11 +324,10 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/save-dispositions/<string:uid>', auth='public')
     def save_dispositions(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
 
         if calcul.step < 5:
             calcul.step = 5
-        # DEAL WITH POST PARAMETERS
 
         if kw.get('show'):
             return werkzeug.utils.redirect('/%s/%s' % (kw.get('show'), calcul.uid))
@@ -306,17 +336,29 @@ class Successoral(openerp.addons.website.controllers.main.Website):
 
     @http.route('/results/<string:uid>', auth='public')
     def results(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
+        calcul = _get_calcul(uid)
+
+        calcul.compute()
+
         return http.request.render('successoral.results', {
             'calcul': calcul,
         })
 
     @http.route('/save-results/<string:uid>', auth='public')
     def save_results(self, uid, **kw):
-        calcul = request.env['successoral.calcul'].sudo().search([('uid', '=', uid)])
-        # DEAL WITH POST PARAMETERS
+        calcul = _get_calcul(uid)
 
         if kw.get('show'):
             return werkzeug.utils.redirect('/%s/%s' % (kw.get('show'), calcul.uid))
         else:
             return werkzeug.utils.redirect('/results/%s' % calcul.uid)
+
+    def _error(self, uid, message, redirect):
+
+        calcul = _get_calcul(uid)
+
+        return http.request.render('successoral.error', {
+            'calcul': calcul,
+            'message': message,
+            'redirect': redirect,
+        })

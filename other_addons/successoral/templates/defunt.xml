@@ -18,15 +18,15 @@
             <div class="col-md-4">
               <div class="input-group mt16">
                     <span class="input-group-addon">Prénom</span>
-                    <input class="form-control" type="text" name="defunt_prenom" t-att-value="calcul.defunt_prenom"/>
+                    <input required="required" class="form-control" type="text" name="defunt_prenom" t-att-value="calcul.defunt_prenom"/>
               </div>
               <div class="input-group mt16">
                     <span class="input-group-addon">Nom</span>
-                    <input class="form-control" type="text" name="defunt_nom" t-att-value="calcul.defunt_nom"/>
+                    <input required="required" class="form-control" type="text" name="defunt_nom" t-att-value="calcul.defunt_nom"/>
               </div>
               <div class="input-group mt16">
                     <span class="input-group-addon">Date de naissance</span>
-                    <input class="form-control datetimepicker" type="text" name="defunt_date_naissance" t-att-value="calcul.defunt_date_naissance"/>
+                    <input required="required" class="form-control datetimepicker" type="text" name="defunt_date_naissance" t-att-value="calcul.defunt_date_naissance"/>
               </div>
             </div>
             <div class="col-md-12">

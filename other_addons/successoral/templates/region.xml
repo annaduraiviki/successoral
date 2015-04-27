@@ -17,17 +17,17 @@
           <div class="form-group">
             <div class="radio">
               <label>
-                <input t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'fr' else ''" name="selected_region" type="radio" value="fr">Région Wallonne</input>
+                <input required="required" t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'fr' else ''" name="selected_region" type="radio" value="fr" disabled="disabled">Région Wallonne</input>
               </label>
             </div>
             <div class="radio">
               <label>
-                <input t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'nl' else ''" name="selected_region" type="radio" value="nl">Région Flamande</input>
+                <input required="required" t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'nl' else ''" name="selected_region" type="radio" value="nl" disabled="disabled">Région Flamande</input>
               </label>
             </div>
             <div class="radio">
               <label>
-                <input t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'bx' else ''" selected="selected" name="selected_region" type="radio" value="bx">Région de Bruxelles-Capitale</input>
+                <input required="required" t-att-checked="'checked' if not calcul.region_region or calcul.region_region == 'bx' else ''" selected="selected" name="selected_region" type="radio" value="bx">Région de Bruxelles-Capitale</input>
               </label>
             </div>
           </div>

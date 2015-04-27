@@ -17,11 +17,11 @@
 
         <hr/>
 
-        <div t-if="calcul.heritiers_ids" class="row">
-          <i>Vous avez actuellement <b><t t-esc="len(calcul.heritiers_ids)"/></b> héritier(s) enregistré(s)</i>
+        <div t-if="calcul.heritier_ids" class="row">
+          <i>Vous avez actuellement <b><t t-esc="len(calcul.heritier_ids)"/></b> héritier(s) enregistré(s)</i>
         </div>
 
-        <div t-if="not calcul.heritiers_ids">
+        <div t-if="not calcul.heritier_ids">
           <div class="row">
             <i>Cliquez sur le bouton "Ajouter un héritier".</i>
           </div>
@@ -30,8 +30,8 @@
 
         <t t-call="successoral.heritierModal"/>
 
-        <div t-if="calcul.heritiers_ids" class="row">
-          <t t-foreach="calcul.heritiers_ids" t-as="heritier">
+        <div t-if="calcul.heritier_ids" class="row">
+          <t t-foreach="calcul.heritier_ids" t-as="heritier">
             <t t-call="successoral.heritierModal"/>
             <a href="#" data-toggle="modal" t-att-data-target="'#heritier_%s' % heritier.id">
               <div class="col-md-3 box-heritier">
@@ -64,32 +64,32 @@
 
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title w300" id="heritierModalTitle"> <i class="fa fa-cube"></i> Ajouter un nouvel héritiers</h4>
+          <h4 class="modal-title w300" id="heritierModalTitle"> <i class="fa fa-cube"></i> Ajouter un nouvel héritier</h4>
         </div>
 
         <div class="modal-body">
           <form method="POST" t-att-action="'/ajout-heritiers/%s' % calcul.uid" class="form-horizontal" role="form">    
-            <input t-if="current_id != 0" name="heritier_id" type="hidden" t-att-value="current_id"/>
+            <input required="required" t-if="current_id != 0" name="heritier_id" type="hidden" t-att-value="current_id"/>
 
             <div class="input-group mt16">
               <span class="input-group-addon">Prénom</span>
-              <input class="form-control" type="text" name="heritier_prenom" t-att-value="None if not heritier else heritier.prenom"/>
+              <input required="required" class="form-control" type="text" name="heritier_prenom" t-att-value="None if not heritier else heritier.prenom"/>
             </div>
             <div class="input-group mt16">
               <span class="input-group-addon">Nom</span>
-              <input class="form-control" type="text" name="heritier_nom" t-att-value="None if not heritier else heritier.nom"/>
+              <input required="required" class="form-control" type="text" name="heritier_nom" t-att-value="None if not heritier else heritier.nom"/>
             </div>
             <div class="input-group mt16">
               <span class="input-group-addon">Lien de parenté</span>
               <select class="form-control" name="heritier_lien">
-                <option value="enfant" t-att-selected="'selected' if heritier and heritier.lien == 'enfant' else ''">Enfant</option>
-                <option value="epoux" t-att-selected="'selected' if heritier and heritier.lien == 'epoux' else ''">Epoux/Epouse</option>
-                <option value="petit-enfant" t-att-selected="'selected' if heritier and heritier.lien == 'petit-enfant' else ''">Petit-Enfant</option>
+                <t t-foreach="all_liens" t-as="lien">
+                  <option t-att-value="lien[0]" t-att-selected="'selected' if heritier and heritier.lien == lien[0] else ''"><t t-esc="lien[1]"/></option>
+                </t>
               </select>
             </div>
             <div class="input-group mt16">
               <span class="input-group-addon">Date de naissance</span>
-              <input class="form-control datetimepicker" type="text" name="heritier_date_naissance" t-att-value="None if not heritier else heritier.date_naissance"/>
+              <input required="required" class="form-control datetimepicker" type="text" name="heritier_date_naissance" t-att-value="None if not heritier else heritier.date_naissance"/>
             </div>
             <div class="mt16">
               <input type="checkbox" name="heritier_is_hand" t-att-checked="'checked' if heritier and heritier.is_hand else ''"> <b>Handicapé</b></input>

@@ -15,7 +15,7 @@
         </div>
 
         <div>
-          <h2>Succession de <span t-field="calcul.famille_name"/></h2>
+          <h2>Succession de <span t-field="calcul.defunt_prenom"/> <span t-field="calcul.defunt_nom"/></h2>
         </div>
 
         <div>

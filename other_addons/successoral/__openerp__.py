@@ -31,6 +31,7 @@
         'templates/defunt.xml',
         'templates/dispositions.xml',
         'templates/donation.xml',
+        'templates/error.xml',
         'templates/famille.xml',
         'templates/heritiers.xml',
         'templates/home.xml',

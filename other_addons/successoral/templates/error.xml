@@ -1,0 +1,25 @@
+<openerp>
+  <data>
+	<template id="successoral.error">
+  <t t-call="successoral.layout">
+
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
+
+        <!-- <t t-set="active_menu" t-value="'defunt'"/> -->
+        <!-- <t t-set="save_link" t-value="'save-defunt'"/> -->
+        <t t-call="successoral.top_menu"/>
+
+        <div class="col-xs-12">
+          Erreur : <t t-esc="message"/>.
+        </div>
+        <div class="mt64 col-xs-12 text-right">
+          <a class="btn btn-primary" t-att-href="redirect">Ok, j'ai compris</a>
+        </div>
+      </div>
+    </div>
+  </t>
+</template>
+
+  </data>
+</openerp>

@@ -35,7 +35,7 @@
                   Actif mobilier:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_cong_actif_mobilier" t-att-value="calcul.biens_cong_actif_mobilier"/>
+                    <input required="required" class="form-control" type="number" name="biens_conjug_actif_mobilier" t-att-value="calcul.biens_conjug_actif_mobilier"/>
                   </div>
                 </div>
 
@@ -43,7 +43,7 @@
                   Actif mobilier:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_propre_actif_mobilier" t-att-value="calcul.biens_propre_actif_mobilier"/>
+                    <input required="required" class="form-control" type="number" name="biens_propre_actif_mobilier" t-att-value="calcul.biens_propre_actif_mobilier"/>
                   </div>
                 </div>
 
@@ -51,7 +51,7 @@
                   Passif mobilier spécifique:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_propre_passif_mobilier" t-att-value="calcul.biens_propre_passif_mobilier"/>
+                    <input required="required" class="form-control" type="number" name="biens_propre_passif_mobilier" t-att-value="calcul.biens_propre_passif_mobilier"/>
                   </div>
                 </div>
               </div>
@@ -65,7 +65,7 @@
                   Logement familial:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_conjug_logement_familial" t-att-value="calcul.biens_conjug_logement_familial"/>
+                    <input required="required" class="form-control" type="number" name="biens_conjug_logement_familial" t-att-value="calcul.biens_conjug_logement_familial"/>
                   </div>
                 </div>
 
@@ -73,7 +73,7 @@
                   Logement familial:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_propre_logement_familial" t-att-value="calcul.biens_propre_logement_familial"/>
+                    <input required="required" class="form-control" type="number" name="biens_propre_logement_familial" t-att-value="calcul.biens_propre_logement_familial"/>
                   </div>
                 </div>
 
@@ -81,7 +81,7 @@
                   Passif spécifique relatif au logement familial:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_propre_logement_passif" t-att-value="calcul.biens_propre_logement_passif"/>
+                    <input required="required" class="form-control" type="number" name="biens_propre_logement_passif" t-att-value="calcul.biens_propre_logement_passif"/>
                   </div>
                 </div>
               </div>
@@ -91,7 +91,7 @@
                   Autres biens immobiliers:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_conjug_autres" t-att-value="calcul.biens_conjug_autres"/>
+                    <input required="required" class="form-control" type="number" name="biens_conjug_autres" t-att-value="calcul.biens_conjug_autres"/>
                   </div>
                 </div>
 
@@ -99,7 +99,7 @@
                   Autres biens immobiliers:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_propre_autres" t-att-value="calcul.biens_propre_autres"/>
+                    <input required="required" class="form-control" type="number" name="biens_propre_autres" t-att-value="calcul.biens_propre_autres"/>
                   </div>
                 </div>
 
@@ -107,7 +107,7 @@
                   Passif spécifique relatif aux autres biens immobiliers:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_propre_passif" t-att-value="calcul.biens_propre_passif"/>
+                    <input required="required" class="form-control" type="number" name="biens_propre_passif" t-att-value="calcul.biens_propre_passif"/>
                   </div>
                 </div>
               </div>
@@ -121,7 +121,7 @@
                   Actif de l'entreprise/entreprise familiale:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_conjug_entreprise_actif" t-att-value="calcul.biens_conjug_entreprise_actif"/>
+                    <input required="required" class="form-control" type="number" name="biens_conjug_entreprise_actif" t-att-value="calcul.biens_conjug_entreprise_actif"/>
                   </div>
                 </div>
 
@@ -129,7 +129,7 @@
                   Actif de l'entreprise/entreprise familiale:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_propre_entreprise_actif" t-att-value="calcul.biens_propre_entreprise_actif"/>
+                    <input required="required" class="form-control" type="number" name="biens_propre_entreprise_actif" t-att-value="calcul.biens_propre_entreprise_actif"/>
                   </div>
                 </div>
               </div>
@@ -143,7 +143,7 @@
                   Dettes de la communauté:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_conjug_dettes" t-att-value="calcul.biens_conjug_dettes"/>
+                    <input required="required" class="form-control" type="number" name="biens_conjug_dettes" t-att-value="calcul.biens_conjug_dettes"/>
                   </div>
                 </div>
 
@@ -151,7 +151,7 @@
                   Dettes du patrimoine propre (= les dettes "non spécifiques"):
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_propre_dettes" t-att-value="calcul.biens_propre_dettes"/>
+                    <input required="required" class="form-control" type="number" name="biens_propre_dettes" t-att-value="calcul.biens_propre_dettes"/>
                   </div>
                 </div>
               </div>
@@ -163,7 +163,7 @@
                 <div class="col-md-12">
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input class="form-control" type="number" name="biens_frais_funeraires" t-att-value="calcul.biens_frais_funeraires"/>
+                    <input required="required" class="form-control" type="number" name="biens_frais_funeraires" t-att-value="calcul.biens_frais_funeraires"/>
                   </div>
                 </div>
               </div>

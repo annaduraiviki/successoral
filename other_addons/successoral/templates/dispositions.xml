@@ -1,35 +1,125 @@
 <openerp>
   <data>
-  	<template id="successoral.dispositions">
-    <t t-call="successoral.layout">
 
-      <div id="wrap" class="oe_structure oe_empty">
-        <div id="page-container" class="container">
+<template id="successoral.dispositions">
+  <t t-call="successoral.layout">
 
-          <t t-set="active_menu" t-value="'dispositions'"/>
-          <t t-set="save_link" t-value="'save-dispositions'"/>
-          <t t-call="successoral.top_menu"/>
+    <div id="wrap" class="oe_structure oe_empty">
+      <div id="page-container" class="container">
 
-          <div>
-            <h2>dispositions du/de la défunt(e)</h2>
-          </div>
+        <t t-set="active_menu" t-value="'dispositions'"/>
+        <t t-set="save_link" t-value="'save-dispositions'"/>
+        <t t-call="successoral.top_menu"/>
 
-          <div>
-            dispositions <b>coucou les dispositionss</b>.
-          </div>
+        <div class="row">
+          <h2>Dispositions du/de la défunt(e).</h2>
+          <h3>Calcul de l'effet de ces dispositions sur les droits de succession</h3>
+        </div>
 
-          <div>
-            <form t-att-action="'/save-dispositions/%s' % calcul.uid">
-              <div>
-                Je sais pas trop quoi mettre ici.
-              </div>
+        <hr/>
 
-              <button class="pull-right btn btn-primary" type="submit">Calculer !</button>
-            </form>
+        <div t-if="calcul.disposition_ids" class="row">
+          <i>Vous avez actuellement <b><t t-esc="len(calcul.disposition_ids)"/></b> disposition(s) enregistrée(s)</i>
+        </div>
+
+        <div t-if="not calcul.disposition_ids">
+          <div class="row">
+            <i>Cliquez sur le bouton "Ajouter une disposition".</i>
           </div>
         </div>
+
+
+        <t t-call="successoral.dispositionModal"/>
+
+        <div t-if="calcul.disposition_ids" class="row">
+          <t t-foreach="calcul.disposition_ids" t-as="disposition">
+            <t t-call="successoral.dispositionModal"/>
+            <a href="#" data-toggle="modal" t-att-data-target="'#disposition_%s' % disposition.id">
+              <div class="col-md-3 box-disposition">
+                Disposition à <t t-esc="disposition.heritier_id.prenom"/><br/>
+                d'une valeur de <t t-esc="disposition.amount"/>€
+              </div>
+            </a>
+          </t>
+        </div>
+
+        <div class="row">
+          <div>
+            <a class="btn btn-default mt16" data-toggle="modal" data-target="#disposition_0">+ Ajouter disposition</a> 
+          </div>
+          <a class="pull-right btn btn-primary" t-att-href="'/save-dispositions/%s' % calcul.uid">Suivant</a>
+        </div>
+
+
       </div>
-    </t>
-    </template>
+    </div>
+  </t>
+</template>
+
+
+<template id="dispositionModal">
+  <t t-set="current_id" t-value="0 if not disposition else disposition.id"/>
+
+  <div class="modal fade" t-att-id="'disposition_%s' % current_id" tabindex="-1" role="dialog" aria-labelledby="dispositionModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title w300" id="dispositionModalTitle"> <i class="fa fa-cube"></i> Ajouter une nouvelle disposition</h4>
+        </div>
+
+        <div class="modal-body">
+          <form method="POST" t-att-action="'/ajout-disposition/%s' % calcul.uid" class="form-horizontal" role="form">    
+            <input required="required" t-if="current_id != 0" name="disposition_id" type="hidden" t-att-value="current_id"/>
+
+            <div class="input-group mt16">
+              <span class="input-group-addon">Héritier</span>
+              <select class="form-control" name="disposition_heritier">
+                <t t-foreach="calcul.heritier_ids" t-as="heritier">
+                  <option t-att-value="heritier.id" t-att-selected="'selected' if donation and donation.heritier_id == heritier else ''"><t t-esc="heritier.prenom"/> <t t-esc="heritier.nom"/></option>
+                </t>
+              </select>
+            </div>
+              
+            <div class="input-group mt16">
+              <span class="input-group-addon">amount</span>
+              <span class="input-group-addon">€</span>
+              <input required="required" class="form-control" type="number" name="disposition_amount" t-att-value="disposition.amount if disposition else 0"/>
+            </div>
+
+            <div class="mt16">
+              Origine:
+              <div>
+                <input required="required" type="radio" value="commun" name="disposition_origine" t-att-checked="'checked' if disposition and disposition.origine == 'commun' else ''"/> patrimoine commun des époux donateurs <br/>
+                <input required="required" type="radio" value="propre" name="disposition_origine" t-att-checked="'checked' if disposition and disposition.origine == 'propre' else ''"/> patrimoine propre du donateur
+              </div>
+            </div>
+
+            <div class="input-group mt16">
+              <span class="input-group-addon">Type de disposition</span>
+              <select class="form-control" name="disposition_type">
+                <option value="immeuble" t-att-selected="'selected' if disposition and disposition.type == 'immeuble' else ''">Immeuble</option>
+                <option value="meuble" t-att-selected="'selected' if disposition and disposition.type == 'meuble' else ''">Meuble</option>
+                <option value="dunno" t-att-selected="'selected' if disposition and disposition.type == 'dunno' else ''">Dunno3</option>
+              </select>
+            </div>
+
+<!--             <div class="input-group mt16">
+              <span class="input-group-addon">Moment</span> 
+              <input required="required" class="form-control" type="text" name="disposition_moment" t-att-value="disposition.moment if disposition else ''"/>
+            </div> -->
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Sauver</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
   </data>
 </openerp>

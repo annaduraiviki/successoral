@@ -15,7 +15,7 @@
 <!--         <li><a t-if="calcul.step >= 3" t-att-class="'active-menu' if active_menu == 'vie' else ''" t-att-href="'/%s/%s?show=vie' % (save_link, calcul.uid)">Choix de vie</a></li> -->
         <li><a t-if="calcul.step >= 2" t-att-class="'active-menu' if active_menu == 'heritiers' else ''" t-att-href="'/%s/%s?show=heritiers' % (save_link, calcul.uid)">Héritiers</a></li>
         <li><a t-if="calcul.step >= 3" t-att-class="'active-menu' if active_menu == 'biens' else ''" t-att-href="'/%s/%s?show=biens' % (save_link, calcul.uid)">Biens</a></li>
-        <li><a t-if="calcul.step >= 4" t-att-class="'active-menu' if active_menu == 'donation' else ''" t-att-href="'/%s/%s?show=donation' % (save_link, calcul.uid)">Donation (option)</a></li>
+        <li><a t-if="calcul.step >= 4" t-att-class="'active-menu' if active_menu == 'donation' else ''" t-att-href="'/%s/%s?show=donation' % (save_link, calcul.uid)">Donations (option)</a></li>
         <li><a t-if="calcul.step >= 4" t-att-class="'active-menu' if active_menu == 'dispositions' else ''" t-att-href="'/%s/%s?show=dispositions' % (save_link, calcul.uid)">Dispositions</a></li>
         <li><a t-if="calcul.step >= 5" t-att-class="'active-menu' if active_menu == 'results' else ''" t-att-href="'/%s/%s?show=results' % (save_link, calcul.uid)">Résultats</a></li>
 <!--         <li>
