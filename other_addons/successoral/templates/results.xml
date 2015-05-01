@@ -11,22 +11,13 @@
         <t t-call="successoral.top_menu"/>
 
         <div>
-          <i>Calcul fait le <span t-field="calcul.create_date"/></i>
-        </div>
-
-        <div>
           <h2>Succession de <span t-field="calcul.defunt_prenom"/> <span t-field="calcul.defunt_nom"/></h2>
         </div>
 
         <div>
-          Héritage avec [TODO: résumé de la famille]
+          <i>Calcul fait le <span t-field="calcul.create_date"/></i> <br/>
+          pour <span t-field="calcul.region_region"/>.
         </div>
-
-        <div>
-          [TODO: type de régime légal]
-        </div>
-
-
 
         <!-- COMMUNAUTE CONJUGALE -->
         <div class="box mt32">
@@ -41,6 +32,13 @@
             </tr>
 
             <tr>
+              <td>Actif mobilier</td>
+              <td><span t-field="calcul.biens_conjug_actif_mobilier"/>€</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr>
               <td>Logement familial</td>
               <td><t t-esc="calcul.biens_conjug_logement_familial"/>€</td>
               <td></td>
@@ -48,8 +46,8 @@
             </tr>
 
             <tr>
-              <td>Mobilier</td>
-              <td><t t-esc="calcul.biens_conjug_actif_mobilier"/>€</td>
+              <td>Autres biens immobiliers</td>
+              <td><t t-esc="calcul.biens_conjug_autres_immobilier"/>€</td>
               <td></td>
               <td></td>
             </tr>
@@ -57,13 +55,6 @@
             <tr>
               <td>Actif de l'entreprise</td>
               <td><t t-esc="calcul.biens_conjug_entreprise_actif"/>€</td>
-              <td></td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td>Autres biens</td>
-              <td><t t-esc="calcul.biens_conjug_autres"/>€</td>
               <td></td>
               <td></td>
             </tr>
@@ -77,16 +68,16 @@
             
             <tr class="success">
               <td>Total</td>
-              <td><t t-esc="calcul.biens_conjug_total"/>€</td>
-              <td><t t-esc="calcul.biens_conjug_dettes_total"/>€</td>
-              <td><t t-esc="calcul.biens_conjug_total - calcul.biens_conjug_dettes"/>€</td>
+              <td><t t-esc="calcul.biens_conjug_actif_total"/>€</td>
+              <td><t t-esc="calcul.biens_conjug_passif_total"/>€</td>
+              <td><t t-esc="calcul.biens_conjug_actif_total - calcul.biens_conjug_dettes"/>€</td>
             </tr>
           </table>
         </div>
 
 
         <!-- BIENS PROPRE -->
-<!--         <div class="box mt32">
+        <div class="box mt32">
           <h3>Biens propres</h3>
 
           <table class="table table-condensed">
@@ -94,52 +85,79 @@
               <th></th>
               <th>Actif</th>
               <th>Passif</th>
-              <th></th>
+              <th>Net</th>
+            </tr>
+
+            <tr>
+              <td>Actif mobilier</td>
+              <td><t t-esc="calcul.biens_propre_actif_mobilier"/>€</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td>Passif mobilier spécifique</td>
+              <td></td>
+              <td><t t-esc="calcul.biens_propre_passif_mobilier"/>€</td>
+              <td></td>
             </tr>
 
             <tr>
               <td>Logement familial</td>
-              <td><t t-esc="calcul.biens_conjug_logement_familial"/>€</td>
+              <td><t t-esc="calcul.biens_propre_logement_familial"/>€</td>
               <td></td>
               <td></td>
             </tr>
 
             <tr>
-              <td>Mobilier</td>
-              <td><t t-esc="calcul.biens_conjug_actif_mobilier"/>€</td>
+              <td>Passif spécifique relatif au logement familial</td>
               <td></td>
+              <td><t t-esc="calcul.biens_propre_logement_passif"/>€</td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td>Autres biens immobiliers</td>
+              <td><t t-esc="calcul.biens_propre_autres"/>€</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td>Passif spécifique relatif aux autres biens immobiliers</td>
+              <td></td>
+              <td><t t-esc="calcul.biens_propre_passif"/>€</td>
               <td></td>
             </tr>
 
             <tr>
               <td>Actif de l'entreprise</td>
-              <td><t t-esc="calcul.biens_conjug_entreprise_actif"/>€</td>
+              <td><t t-esc="calcul.biens_propre_entreprise_actif"/>€</td>
               <td></td>
               <td></td>
             </tr>
 
             <tr>
-              <td>Autres biens</td>
-              <td><t t-esc="calcul.biens_conjug_autres"/>€</td>
+              <td>Dettes non spécifiques</td>
               <td></td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td>Dettes</td>
-              <td></td>
-              <td><t t-esc="calcul.biens_conjug_dettes"/>€</td>
+              <td><t t-esc="calcul.biens_propre_dettes"/>€</td>
               <td></td>
             </tr>
             
-            <tr>
+            <tr class="success">
               <td>Total</td>
-              <td><t t-esc="calcul.biens_conjug_total"/>€</td>
-              <td><t t-esc="calcul.biens_conjug_dettes_total"/>€</td>
-              <td><t t-esc="calcul.biens_conjug_total - calcul.biens_conjug_dettes"/>€</td>
+              <td><t t-esc="calcul.biens_propre_actif_total"/>€</td>
+              <td><t t-esc="calcul.biens_propre_passif_total"/>€</td>
+              <td><t t-esc="calcul.biens_propre_actif_total - calcul.biens_propre_dettes"/>€</td>
             </tr>
           </table>
-        </div> -->
+        </div>
+
+        <!-- BIENS PROPRE -->
+        <div class="box mt32">
+          <h3>Frais funéraires</h3>
+           <t t-esc="calcul.biens_frais_funeraires"/>€
+        </div>
 
           <t t-foreach="droits_succession" t-as="rec">
             <div class="box-succession mt32">

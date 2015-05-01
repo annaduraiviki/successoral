@@ -214,8 +214,8 @@ class Successoral(openerp.addons.website.controllers.main.Website):
             calcul.biens_propre_logement_familial = kw.get('biens_propre_logement_familial')
         if kw.get('biens_propre_logement_passif'):
             calcul.biens_propre_logement_passif = kw.get('biens_propre_logement_passif')
-        if kw.get('biens_conjug_autres'):
-            calcul.biens_conjug_autres = kw.get('biens_conjug_autres')
+        if kw.get('biens_conjug_autres_immobilier'):
+            calcul.biens_conjug_autres_immobilier = kw.get('biens_conjug_autres_immobilier')
         if kw.get('biens_propre_autres'):
             calcul.biens_propre_autres = kw.get('biens_propre_autres')
         if kw.get('biens_propre_passif'):

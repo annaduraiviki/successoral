@@ -35,12 +35,12 @@ class SuccessoralCalcul(models.Model):
     # 5. BIENS
     biens_conjug_actif_mobilier = fields.Float(default=0.0)
     biens_conjug_logement_familial = fields.Float(default=0.0)
-    biens_conjug_autres = fields.Float(default=0.0)
+    biens_conjug_autres_immobilier = fields.Float(default=0.0)
     biens_conjug_entreprise_actif = fields.Float(default=0.0)
     biens_conjug_dettes = fields.Float(default=0.0)
 
-    biens_conjug_total = fields.Float(compute='_compute_biens_conjug_total')
-    biens_conjug_dettes_total = fields.Float(compute='_compute_biens_conjug_dettes_total')
+    biens_conjug_actif_total = fields.Float(compute='_compute_biens_conjug_actif_total')
+    biens_conjug_passif_total = fields.Float(compute='_compute_biens_conjug_passif_total')
 
     biens_propre_actif_mobilier = fields.Float(default=0.0)
     biens_propre_passif_mobilier = fields.Float(default=0.0)
@@ -50,6 +50,9 @@ class SuccessoralCalcul(models.Model):
     biens_propre_passif = fields.Float(default=0.0)
     biens_propre_entreprise_actif = fields.Float(default=0.0)
     biens_propre_dettes = fields.Float(default=0.0)
+
+    biens_propre_actif_total = fields.Float(compute='_compute_biens_propre_actif_total')
+    biens_propre_passif_total = fields.Float(compute='_compute_biens_propre_passif_total')
 
     biens_frais_funeraires = fields.Float(default=0.0)
     biens_check1 = fields.Boolean()
@@ -69,24 +72,36 @@ class SuccessoralCalcul(models.Model):
 
     @api.one
     @api.depends(
-        'biens_conjug_actif_mobilier', 'biens_conjug_logement_familial', 'biens_conjug_autres',
+        'biens_propre_actif_mobilier', 'biens_propre_logement_familial', 'biens_propre_autres',
+        'biens_propre_entreprise_actif')
+    def _compute_biens_propre_actif_total(self):
+        self.biens_propre_actif_total = self.biens_propre_actif_mobilier + self.biens_propre_logement_familial + self.biens_propre_entreprise_actif
+
+    @api.one
+    @api.depends('biens_propre_passif_mobilier', 'biens_propre_logement_passif', 'biens_propre_passif', 'biens_propre_dettes')
+    def _compute_biens_propre_passif_total(self):
+        self.biens_propre_passif_total = self.biens_propre_passif_mobilier + self.biens_propre_logement_passif + self.biens_propre_passif + self.biens_propre_dettes
+
+    @api.one
+    @api.depends(
+        'biens_conjug_actif_mobilier', 'biens_conjug_logement_familial', 'biens_conjug_autres_immobilier',
         'biens_conjug_entreprise_actif')
-    def _compute_biens_conjug_total(self):
-        self.biens_conjug_total = self.biens_conjug_actif_mobilier + self.biens_conjug_logement_familial + self.biens_conjug_entreprise_actif
+    def _compute_biens_conjug_actif_total(self):
+        self.biens_conjug_actif_total = self.biens_conjug_actif_mobilier + self.biens_conjug_logement_familial + self.biens_conjug_entreprise_actif
 
     @api.one
     @api.depends('biens_conjug_dettes')
-    def _compute_biens_conjug_dettes_total(self):
-        self.biens_conjug_dettes_total = self.biens_conjug_dettes
+    def _compute_biens_conjug_passif_total(self):
+        self.biens_conjug_passif_total = self.biens_conjug_dettes
 
     @api.one
     @api.depends(
         'biens_conjug_actif_mobilier', 'biens_propre_actif_mobilier', 'biens_propre_passif_mobilier',
         'biens_conjug_logement_familial', 'biens_propre_logement_familial', 'biens_propre_logement_passif',
-        'biens_conjug_autres', 'biens_propre_autres', 'biens_propre_passif', 'biens_conjug_entreprise_actif',
+        'biens_conjug_autres_immobilier', 'biens_propre_autres', 'biens_propre_passif', 'biens_conjug_entreprise_actif',
         'biens_propre_entreprise_actif', 'biens_conjug_dettes', 'biens_propre_dettes', 'biens_frais_funeraires')
     def _compute_actif_net(self):
-        biens_conjug_net = (self.biens_conjug_actif_mobilier + self.biens_conjug_logement_familial + self.biens_conjug_autres +
+        biens_conjug_net = (self.biens_conjug_actif_mobilier + self.biens_conjug_logement_familial + self.biens_conjug_autres_immobilier +
                             self.biens_conjug_entreprise_actif - self.biens_conjug_dettes) / 2.
         biens_propre_net = (self.biens_propre_actif_mobilier - self.biens_propre_passif_mobilier + self.biens_propre_logement_familial -
                             self.biens_propre_logement_passif + self.biens_propre_autres - self.biens_propre_passif +

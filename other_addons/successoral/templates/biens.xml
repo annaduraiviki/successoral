@@ -91,7 +91,7 @@
                   Autres biens immobiliers:
                   <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input required="required" class="form-control" type="number" name="biens_conjug_autres" t-att-value="calcul.biens_conjug_autres"/>
+                    <input required="required" class="form-control" type="number" name="biens_conjug_autres_immobilier" t-att-value="calcul.biens_conjug_autres_immobilier"/>
                   </div>
                 </div>
 
