@@ -34,18 +34,23 @@ class SuccessoralCalcul(models.Model):
 
     # 5. BIENS
     biens_conjug_actif_mobilier = fields.Float(default=0.0)
+    biens_conjug_logement_familial = fields.Float(default=0.0)
+    biens_conjug_autres = fields.Float(default=0.0)
+    biens_conjug_entreprise_actif = fields.Float(default=0.0)
+    biens_conjug_dettes = fields.Float(default=0.0)
+
+    biens_conjug_total = fields.Float(compute='_compute_biens_conjug_total')
+    biens_conjug_dettes_total = fields.Float(compute='_compute_biens_conjug_dettes_total')
+
     biens_propre_actif_mobilier = fields.Float(default=0.0)
     biens_propre_passif_mobilier = fields.Float(default=0.0)
-    biens_conjug_logement_familial = fields.Float(default=0.0)
     biens_propre_logement_familial = fields.Float(default=0.0)
     biens_propre_logement_passif = fields.Float(default=0.0)
-    biens_conjug_autres = fields.Float(default=0.0)
     biens_propre_autres = fields.Float(default=0.0)
     biens_propre_passif = fields.Float(default=0.0)
-    biens_conjug_entreprise_actif = fields.Float(default=0.0)
     biens_propre_entreprise_actif = fields.Float(default=0.0)
-    biens_conjug_dettes = fields.Float(default=0.0)
     biens_propre_dettes = fields.Float(default=0.0)
+
     biens_frais_funeraires = fields.Float(default=0.0)
     biens_check1 = fields.Boolean()
     biens_check2 = fields.Boolean()
@@ -62,6 +67,19 @@ class SuccessoralCalcul(models.Model):
     immobilier_net = fields.Float(compute='_compute_actif_net', store=True)
     actif_net = fields.Float(compute='_compute_actif_net', store=True)
 
+    @api.one
+    @api.depends(
+        'biens_conjug_actif_mobilier', 'biens_conjug_logement_familial', 'biens_conjug_autres',
+        'biens_conjug_entreprise_actif')
+    def _compute_biens_conjug_total(self):
+        self.biens_conjug_total = self.biens_conjug_actif_mobilier + self.biens_conjug_logement_familial + self.biens_conjug_entreprise_actif
+
+    @api.one
+    @api.depends('biens_conjug_dettes')
+    def _compute_biens_conjug_dettes_total(self):
+        self.biens_conjug_dettes_total = self.biens_conjug_dettes
+
+    @api.one
     @api.depends(
         'biens_conjug_actif_mobilier', 'biens_propre_actif_mobilier', 'biens_propre_passif_mobilier',
         'biens_conjug_logement_familial', 'biens_propre_logement_familial', 'biens_propre_logement_passif',
@@ -80,11 +98,14 @@ class SuccessoralCalcul(models.Model):
         results = []
 
         # Calcul de l'usufruit et la nue-propriété
-        epoux = self.heritier_ids.filtered(lambda x: x.lien == 'epoux')
+        epoux = self.heritier_ids.filtered(lambda x: x.lien in ['epoux', 'cohabitant'])
         if len(epoux) > 1:
             _logger.exception('It cannot be more than one epoux')
             raise Exception
-        others = self.heritier_ids.filtered(lambda x: x.lien != 'epoux')
+        others = self.heritier_ids.filtered(lambda x: x.lien not in ['epoux', 'cohabitant'])
+
+        print('epoux : %s and others : %s' % (epoux.name, others))
+
         US, NP = 0, 1
         if epoux:
             US, NP = self._us_np(epoux.date_naissance)
@@ -92,10 +113,14 @@ class SuccessoralCalcul(models.Model):
 
         # Calcul du taux de chaque héritier
         for heritier in self.heritier_ids:
-            if heritier.lien == 'epoux':
-                taux[heritier] = US
+            if others:
+                if heritier == epoux:
+                    taux[heritier] = US
+                else:
+                    taux[heritier] = NP/float(len(others))
             else:
-                taux[heritier] = NP/float(len(others))
+                taux[heritier] = 1
+            print('taux of %s = %s' % (heritier.name, taux[heritier]))
 
         # Calcul des droits de succession pour chaque héritier
         for heritier in self.heritier_ids:
@@ -104,11 +129,12 @@ class SuccessoralCalcul(models.Model):
             # ? virer le passif succession ?
             amount_immobilier = self.immobilier_net - self.biens_frais_funeraires
             amount_immobilier *= taux[heritier]
+            amount_immobilier_imposable = amount_immobilier
 
-            if heritier.lien == 'epoux':
+            if heritier.lien in ['epoux', 'cohabitant']:
                 # 55 bis
                 _logger.warning('55 bis : on ne calcule pas les droits sur le logement conjug (%s €)' % self.biens_conjug_logement_familial)
-                amount_immobilier -= (taux[heritier]*self.biens_conjug_logement_familial/2.)
+                amount_immobilier_imposable -= (taux[heritier]*self.biens_conjug_logement_familial/2.)
 
             # TODO: définir le membre de droite
             amount_reste = self.actif_net - self.immobilier_net
@@ -119,16 +145,30 @@ class SuccessoralCalcul(models.Model):
             for disposition in heritier.disposition_ids:
                 amount_reste += disposition.amount
 
-            # Calcul des droits
-            droits_immobilier = self._droits_succession(heritier, amount_immobilier, type='immobilier')
-            droits_reste = self._droits_succession(heritier, amount_reste, type='mobilier')
+            amount_reste_imposable = amount_reste
 
-            droits = droits_immobilier + droits_reste
-            _logger.info('Droits pour %s %s : %s (immobilier (%s) = %s, reste (%s) = %s)' % (heritier.prenom, heritier.nom, droits, amount_immobilier, droits_immobilier, amount_reste, droits_reste))
+            # Calcul des droits
+            droits_immobilier, taux_immobilier = self._droits_succession(heritier, amount_immobilier_imposable, type='immobilier')
+            droits_reste, taux_reste = self._droits_succession(heritier, amount_reste_imposable, type='mobilier')
+
+            amount_total = amount_immobilier + amount_reste
+            droits_total = droits_immobilier + droits_reste
+
+            _logger.info('Droits pour %s %s : %s (immobilier (%s) = %s, reste (%s) = %s)' % (heritier.prenom, heritier.nom, droits_total, amount_immobilier, droits_immobilier, amount_reste, droits_reste))
+
             results.append({
-                'droits': droits,
+                'heritier_id': heritier,
+                'amount_immobilier': amount_immobilier,
+                'taux_immobilier': taux_immobilier,
+                'droits_immobilier': droits_immobilier,
+                'amount_reste': amount_reste,
+                'taux_reste': taux_reste,
+                'droits_reste': droits_reste,
+                'amount_total': amount_total,
+                'droits_total': droits_total,
             })
         print results
+        return results
 
     def _us_np(self, date_naissance):
         diff = (datetime.now() - datetime.strptime(date_naissance, '%Y-%m-%d'))
@@ -161,14 +201,14 @@ class SuccessoralCalcul(models.Model):
 
         # specials : abattement_15000, abattement_25000
 
-        # import pudb; pudb.set_trace()
+        if amount <= 0:
+            return 0, 0
 
         if self.region_region == 'bx':
             if not cat:
-                # FIXME : residence_principale and not immobilier
-                if (heritier.lien == 'epoux' or heritier.ligne_directe) and type == 'immobilier':
+                if (heritier.lien == 'epoux' or heritier.ligne_directe) and type == 'residence_principale':
                     cat = '2'
-                elif (heritier.lien == 'epoux' or heritier.ligne_directe) and type != 'immobilier':
+                elif (heritier.lien == 'epoux' or heritier.ligne_directe) and type != 'residence_principale':
                     cat = '1a'
                 elif heritier.lien == 'frere':
                     cat = '1b'
@@ -186,97 +226,97 @@ class SuccessoralCalcul(models.Model):
                 # ligne directe, epoux et cohabitant legal
                 if 'abattement_15000' in specials:
                     if amount <= 15000:
-                        return 0
+                        return 0, 0
                     elif amount <= 50000:
-                        return 0.03*amount
+                        return 0.03*amount, 0.03
                     elif amount <= 100000:
-                        return 1050 + 0.08*(amount-50000)
+                        return 1050 + 0.08*(amount-50000), 0.08
                     elif amount <= 175000:
-                        return 5050 + 0.09*(amount-100000)
+                        return 5050 + 0.09*(amount-100000), 0.09
                     elif amount <= 250000:
-                        return 11800 + 0.18*(amount-175000)
+                        return 11800 + 0.18*(amount-175000), 0.18
                     elif amount <= 500000:
-                        return 25300 + 0.24*(amount-250000)
+                        return 25300 + 0.24*(amount-250000), 0.24
                     else:
-                        return 85300 + 0.30*(amount-500000)
+                        return 85300 + 0.30*(amount-500000), 0.30
                 else:
                     if amount <= 15000:
-                        return 0.03*amount
+                        return 0.03*amount, 0.03
                     elif amount <= 50000:
-                        return 0.03*amount
+                        return 0.03*amount, 0.03
                     elif amount <= 100000:
-                        return 1500 + 0.08*(amount-50000)
+                        return 1500 + 0.08*(amount-50000), 0.08
                     elif amount <= 175000:
-                        return 5500 + 0.09*(amount-100000)
+                        return 5500 + 0.09*(amount-100000), 0.09
                     elif amount <= 250000:
-                        return 12250 + 0.18*(amount-175000)
+                        return 12250 + 0.18*(amount-175000), 0.18
                     elif amount <= 500000:
-                        return 25750 + 0.24*(amount-250000)
+                        return 25750 + 0.24*(amount-250000), 0.24
                     else:
-                        return 85750 + 0.30*(amount-500000)
+                        return 85750 + 0.30*(amount-500000), 0.30
 
             elif cat == '1b':
                 if amount <= 12500:
-                    return 0.2*amount
+                    return 0.2*amount, 0.2
                 elif amount <= 25000:
-                    return 2500 + 0.25*(amount-12500)
+                    return 2500 + 0.25*(amount-12500), 0.25
                 elif amount <= 50000:
-                    return 5625 + 0.3*(amount-25000)
+                    return 5625 + 0.3*(amount-25000), 0.3
                 elif amount <= 100000:
-                    return 13125 + 0.4*(amount-50000)
+                    return 13125 + 0.4*(amount-50000), 0.4
                 elif amount <= 175000:
-                    return 33125 + 0.55*(amount-100000)
+                    return 33125 + 0.55*(amount-100000), 0.55
                 elif amount <= 250000:
-                    return 74375 + 0.6*(amount-175000)
+                    return 74375 + 0.6*(amount-175000), 0.6
                 else:
-                    return 119375 + 0.65*(amount-250000)
+                    return 119375 + 0.65*(amount-250000), 0.65
 
             elif cat == '1c':
                 if amount <= 50000:
-                    return 0.35*amount
+                    return 0.35*amount, 0.35
                 elif amount <= 100000:
-                    return 17500 + 0.5*(amount-50000)
+                    return 17500 + 0.5*(amount-50000), 0.5
                 elif amount <= 1750000:
-                    return 42500 + 0.6*(amount-100000)
+                    return 42500 + 0.6*(amount-100000), 0.6
                 else:
-                    return 87500 + 0.7*(amount-1750000)
+                    return 87500 + 0.7*(amount-1750000), 0.7
 
             elif cat == '1d':
                 if amount <= 50000:
-                    return 0.4*amount
+                    return 0.4*amount, 0.4
                 elif amount <= 75000:
-                    return 20000 + 0.55*(amount-50000)
+                    return 20000 + 0.55*(amount-50000), 0.55
                 elif amount <= 175000:
-                    return 33750 + 0.65*(amount-75000)
+                    return 33750 + 0.65*(amount-75000), 0.65
                 else:
-                    return 98750 + 0.8*(amount-175000)
+                    return 98750 + 0.8*(amount-175000), 0.8
 
             elif cat == '1e':
-                return 0.03 * amount
+                return 0.03 * amount, 0.03
 
             elif cat == '2':
                 if amount <= 50000:
-                    return 0.02*amount
+                    return 0.02*amount, 0.02
                 elif amount <= 100000:
-                    return 1000 + 0.053*(amount-50000)
+                    return 1000 + 0.053*(amount-50000), 0.053
                 elif amount <= 175000:
-                    return 3650 + 0.6*(amount-100000)
+                    return 3650 + 0.06*(amount-100000), 0.6
                 elif amount <= 250000:
-                    return 8150 + 0.12*(amount-175000)
+                    return 8150 + 0.12*(amount-175000), 0.12
                 elif amount <= 500000:
-                    return 17150 + 0.24*(amount-250000)
+                    return 17150 + 0.24*(amount-250000), 0.24
                 else:
-                    return 77150 + 0.3*(amount-500000)
+                    return 77150 + 0.3*(amount-500000), 0.3
             else:
                 raise Exception
 
         elif self.region_region == 'fr':
             # TODO
             print 'TODO'
-            return 0
+            return 0, 0
         elif self.region_region == 'nl':
             # TODO
             print 'TODO'
-            return 0
+            return 0, 0
         else:
             raise Exception

@@ -26,117 +26,154 @@
           [TODO: type de régime légal]
         </div>
 
-        <div class="mt32">
+
+
+        <!-- COMMUNAUTE CONJUGALE -->
+        <div class="box mt32">
           <h3>Communauté conjugale</h3>
 
-          <table class="table">
+          <table class="table table-condensed">
             <tr>
               <th></th>
-              <th>Actif brut</th>
-              <th>La part dans le passif spécifique</th>
+              <th>Actif</th>
+              <th>Passif</th>
               <th>Net</th>
             </tr>
 
             <tr>
-              <td>Immobilier</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-            </tr>
-
-            <tr>
               <td>Logement familial</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <td><t t-esc="calcul.biens_conjug_logement_familial"/>€</td>
+              <td></td>
+              <td></td>
             </tr>
 
             <tr>
               <td>Mobilier</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <td><t t-esc="calcul.biens_conjug_actif_mobilier"/>€</td>
+              <td></td>
+              <td></td>
             </tr>
 
             <tr>
               <td>Actif de l'entreprise</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <td><t t-esc="calcul.biens_conjug_entreprise_actif"/>€</td>
+              <td></td>
+              <td></td>
             </tr>
 
             <tr>
+              <td>Autres biens</td>
+              <td><t t-esc="calcul.biens_conjug_autres"/>€</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td>Dettes</td>
+              <td></td>
+              <td><t t-esc="calcul.biens_conjug_dettes"/>€</td>
+              <td></td>
+            </tr>
+            
+            <tr class="success">
               <td>Total</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <td><t t-esc="calcul.biens_conjug_total"/>€</td>
+              <td><t t-esc="calcul.biens_conjug_dettes_total"/>€</td>
+              <td><t t-esc="calcul.biens_conjug_total - calcul.biens_conjug_dettes"/>€</td>
             </tr>
           </table>
         </div>
 
-        <div class="mt32">
-          <h3>Succession</h3>
 
-          <table class="table">
+        <!-- BIENS PROPRE -->
+<!--         <div class="box mt32">
+          <h3>Biens propres</h3>
+
+          <table class="table table-condensed">
             <tr>
               <th></th>
-              <th>La moitié de la communauté nette</th>
-              <th>Biens propres</th>
-              <th>Passif spécifique</th>
-              <th>Passif non-spécifique</th>
-              <th>Actif imposable</th>
-            </tr>
-
-            <tr>
-              <td>Immobilier</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <th>Actif</th>
+              <th>Passif</th>
+              <th></th>
             </tr>
 
             <tr>
               <td>Logement familial</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <td><t t-esc="calcul.biens_conjug_logement_familial"/>€</td>
+              <td></td>
+              <td></td>
             </tr>
 
             <tr>
               <td>Mobilier</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <td><t t-esc="calcul.biens_conjug_actif_mobilier"/>€</td>
+              <td></td>
+              <td></td>
             </tr>
 
             <tr>
               <td>Actif de l'entreprise</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <td><t t-esc="calcul.biens_conjug_entreprise_actif"/>€</td>
+              <td></td>
+              <td></td>
             </tr>
 
             <tr>
+              <td>Autres biens</td>
+              <td><t t-esc="calcul.biens_conjug_autres"/>€</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td>Dettes</td>
+              <td></td>
+              <td><t t-esc="calcul.biens_conjug_dettes"/>€</td>
+              <td></td>
+            </tr>
+            
+            <tr>
               <td>Total</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
-              <td>1000€</td>
+              <td><t t-esc="calcul.biens_conjug_total"/>€</td>
+              <td><t t-esc="calcul.biens_conjug_dettes_total"/>€</td>
+              <td><t t-esc="calcul.biens_conjug_total - calcul.biens_conjug_dettes"/>€</td>
             </tr>
           </table>
-        </div>
+        </div> -->
 
-        <div>
-          [TODO: Le reste]
-        </div>
+          <t t-foreach="droits_succession" t-as="rec">
+            <div class="box-succession mt32">
+              <h3>Droits de succession de <t t-esc="rec['heritier_id'].name"/></h3>
+              <table class="table table-condensed">
+                <tr>
+                  <th></th>
+                  <th>Valeur</th>
+                  <th>Taux</th>
+                  <th>Droits</th>
+                </tr>
+                <tr>
+                  <td>Immobilier</td>
+                  <td><t t-esc="rec['amount_immobilier']"/>€</td>
+                  <td><t t-esc="int(rec['taux_immobilier']*100)"/>%</td>
+                  <td><t t-esc="rec['droits_immobilier']"/>€</td>
+                </tr>
+                <tr>
+                  <td>Reste</td>
+                  <td><t t-esc="rec['amount_reste']"/>€</td>
+                  <td><t t-esc="int(rec['taux_reste']*100)"/>%</td>
+                  <td><t t-esc="rec['droits_reste']"/>€</td>
+                </tr>
+                <tr class="success">
+                  <td>Total</td>
+                  <td><t t-esc="rec['amount_total']"/>€</td>
+                  <td></td>
+                  <td><t t-esc="rec['droits_total']"/>€</td>
+                </tr>
+              </table>
+            </div>
+          </t>
+
+
       </div>
     </div>
   </t>

@@ -11,7 +11,7 @@ div.box {
   position: relative;
 }
 
-.box-donation, .box-heritier, .box-disposition {
+.box-donation, .box-heritier, .box-disposition, .box-succession {
   padding: 10px;
   padding: 2vw;
   color: #676a6c;

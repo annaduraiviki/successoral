@@ -338,10 +338,11 @@ class Successoral(openerp.addons.website.controllers.main.Website):
     def results(self, uid, **kw):
         calcul = _get_calcul(uid)
 
-        calcul.compute()
+        droits_succession = calcul.compute()
 
         return http.request.render('successoral.results', {
             'calcul': calcul,
+            'droits_succession': droits_succession,
         })
 
     @http.route('/save-results/<string:uid>', auth='public')
